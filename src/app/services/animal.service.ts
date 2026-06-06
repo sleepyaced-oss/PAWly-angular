@@ -43,8 +43,7 @@ export interface Animal {
 @Injectable({ providedIn: 'root' })
 export class AnimalService {
 
-  private readonly API = 'http://localhost/pawly-backend/api';
-
+  private readonly API = 'https://pawly-backend-h4hq.onrender.com/api';
   constructor(private http: HttpClient) { }
 
   getAnimales(filtros: FiltrosAnimal = {}): Observable<Animal[]> {

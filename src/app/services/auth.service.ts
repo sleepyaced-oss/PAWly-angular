@@ -22,11 +22,11 @@ export interface RegisterRequest {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
-  private readonly API = 'http://localhost/pawly-backend/api';
+  private readonly API = 'https://pawly-backend-h4hq.onrender.com/api';
   private readonly TOKEN_KEY = 'pawly_token';
-  private readonly USER_KEY  = 'pawly_user';
+  private readonly USER_KEY = 'pawly_user';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   login(email: string, password: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.API}/auth/login`, { email, password }).pipe(
