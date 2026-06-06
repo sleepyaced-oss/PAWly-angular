@@ -17,12 +17,11 @@ export class EditarAnimalComponent implements OnInit {
   cargando = true;
   guardando = false;
   error = '';
-  especies  = ['Perro', 'Gato', 'Conejo', 'Ave', 'Hamster', 'Tortuga'];
-  sexos     = ['MACHO', 'HEMBRA'];
-  etapas    = ['CACHORRO', 'ADULTO', 'MAYOR'];
-  tamanios  = ['PEQUENO', 'MEDIANO', 'GRANDE'];
-  private readonly API = 'http://localhost/pawly-backend/api';
-
+  especies = ['Perro', 'Gato', 'Conejo', 'Ave', 'Hamster', 'Tortuga'];
+  sexos = ['MACHO', 'HEMBRA'];
+  etapas = ['CACHORRO', 'ADULTO', 'MAYOR'];
+  tamanios = ['PEQUENO', 'MEDIANO', 'GRANDE'];
+  private readonly API = 'https://pawly-backend-h4hq.onrender.com/api';
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -52,9 +51,9 @@ export class EditarAnimalComponent implements OnInit {
 
   guardar(): void {
     this.error = '';
-    const req = ['nombre','especie','sexo','etapa_vida','tamanyo','color','descripcion','provincia','localidad'];
+    const req = ['nombre', 'especie', 'sexo', 'etapa_vida', 'tamanyo', 'color', 'descripcion', 'provincia', 'localidad'];
     for (const c of req) {
-      if (!this.datos[c]) { this.error = `El campo "${c.replace('_',' ')}" es obligatorio.`; return; }
+      if (!this.datos[c]) { this.error = `El campo "${c.replace('_', ' ')}" es obligatorio.`; return; }
     }
     this.guardando = true;
     const headers = new HttpHeaders({ Authorization: `Bearer ${this.auth.getToken()}` });
@@ -65,9 +64,9 @@ export class EditarAnimalComponent implements OnInit {
   }
 
   etiquetaTamanyo(t: string): string {
-    return ({ PEQUENO:'Pequeño', MEDIANO:'Mediano', GRANDE:'Grande' } as any)[t] ?? t;
+    return ({ PEQUENO: 'Pequeño', MEDIANO: 'Mediano', GRANDE: 'Grande' } as any)[t] ?? t;
   }
   etiquetaEtapa(e: string): string {
-    return ({ CACHORRO:'Cachorro', ADULTO:'Adulto', MAYOR:'Senior' } as any)[e] ?? e;
+    return ({ CACHORRO: 'Cachorro', ADULTO: 'Adulto', MAYOR: 'Senior' } as any)[e] ?? e;
   }
 }

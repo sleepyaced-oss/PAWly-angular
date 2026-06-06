@@ -13,13 +13,12 @@ import { AuthService } from '../services/auth.service';
 })
 export class SolicitudesComponent implements OnInit {
   recibidas: any[] = [];
-  enviadas: any[]  = [];
+  enviadas: any[] = [];
   cargando = true;
   error = '';
   mensaje = '';
   vista: 'recibidas' | 'enviadas' = 'recibidas';
-  private readonly API = 'http://localhost/pawly-backend/api';
-
+  private readonly API = 'https://pawly-backend-h4hq.onrender.com/api';
   constructor(
     private auth: AuthService,
     private router: Router,
@@ -71,6 +70,6 @@ export class SolicitudesComponent implements OnInit {
   }
 
   etiquetaEstado(e: string): string {
-    return ({ PENDIENTE:'Pendiente', ACEPTADA:'Aceptada', RECHAZADA:'Rechazada' } as any)[e] ?? e;
+    return ({ PENDIENTE: 'Pendiente', ACEPTADA: 'Aceptada', RECHAZADA: 'Rechazada' } as any)[e] ?? e;
   }
 }

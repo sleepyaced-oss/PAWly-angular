@@ -15,8 +15,7 @@ export class FavoritosComponent implements OnInit {
   favoritos: any[] = [];
   cargando = true;
   error = '';
-  private readonly API = 'http://localhost/pawly-backend/api';
-
+  private readonly API = 'https://pawly-backend-h4hq.onrender.com/api';
   constructor(
     private auth: AuthService,
     private router: Router,
@@ -35,12 +34,12 @@ export class FavoritosComponent implements OnInit {
   }
 
   iconoEspecie(e: string): string {
-    return ({ Perro:'🐶', Gato:'🐱', Conejo:'🐰', Ave:'🐦', Hamster:'🐹', Tortuga:'🐢' } as any)[e] ?? '🐾';
+    return ({ Perro: '🐶', Gato: '🐱', Conejo: '🐰', Ave: '🐦', Hamster: '🐹', Tortuga: '🐢' } as any)[e] ?? '🐾';
   }
   etiquetaEtapa(e: string): string {
-    return ({ CACHORRO:'Cachorro', ADULTO:'Adulto', MAYOR:'Senior' } as any)[e] ?? e;
+    return ({ CACHORRO: 'Cachorro', ADULTO: 'Adulto', MAYOR: 'Senior' } as any)[e] ?? e;
   }
   etiquetaTamanyo(t: string): string {
-    return ({ PEQUENO:'Pequeño', MEDIANO:'Mediano', GRANDE:'Grande' } as any)[t] ?? t;
+    return ({ PEQUENO: 'Pequeño', MEDIANO: 'Mediano', GRANDE: 'Grande' } as any)[t] ?? t;
   }
 }

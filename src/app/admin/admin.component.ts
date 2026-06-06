@@ -13,13 +13,13 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./admin.component.css']
 })
 export class AdminComponent implements OnInit {
-  usuarios: any[]    = [];
-  animales: any[]    = [];
+  usuarios: any[] = [];
+  animales: any[] = [];
   solicitudes: any[] = [];
   vista: 'usuarios' | 'animales' | 'solicitudes' = 'animales';
   cargando = true;
-  mensaje  = '';
-  error    = '';
+  mensaje = '';
+  error = '';
 
   // Nuevo usuario
   mostrarFormUsuario = false;
@@ -36,13 +36,12 @@ export class AdminComponent implements OnInit {
   animalEditando: any = null;
   guardandoEdicionAnimal = false;
   errorEdicionAnimal = '';
-  especies  = ['Perro', 'Gato', 'Conejo', 'Ave', 'Hamster', 'Tortuga'];
-  sexos     = ['MACHO', 'HEMBRA'];
-  etapas    = ['CACHORRO', 'ADULTO', 'MAYOR'];
-  tamanios  = ['PEQUENO', 'MEDIANO', 'GRANDE'];
+  especies = ['Perro', 'Gato', 'Conejo', 'Ave', 'Hamster', 'Tortuga'];
+  sexos = ['MACHO', 'HEMBRA'];
+  etapas = ['CACHORRO', 'ADULTO', 'MAYOR'];
+  tamanios = ['PEQUENO', 'MEDIANO', 'GRANDE'];
 
-  private readonly API = 'http://localhost/pawly-backend/api';
-
+  private readonly API = 'https://pawly-backend-h4hq.onrender.com/api';
   constructor(
     private auth: AuthService,
     private router: Router,
@@ -151,9 +150,9 @@ export class AdminComponent implements OnInit {
 
   guardarEdicionAnimal(): void {
     this.errorEdicionAnimal = '';
-    const req = ['nombre','especie','sexo','etapa_vida','tamanyo','color','descripcion','provincia','localidad'];
+    const req = ['nombre', 'especie', 'sexo', 'etapa_vida', 'tamanyo', 'color', 'descripcion', 'provincia', 'localidad'];
     for (const c of req) {
-      if (!this.animalEditando[c]) { this.errorEdicionAnimal = `El campo "${c.replace('_',' ')}" es obligatorio.`; return; }
+      if (!this.animalEditando[c]) { this.errorEdicionAnimal = `El campo "${c.replace('_', ' ')}" es obligatorio.`; return; }
     }
     this.guardandoEdicionAnimal = true;
     const headers = new HttpHeaders({ Authorization: `Bearer ${this.auth.getToken()}` });
@@ -199,13 +198,13 @@ export class AdminComponent implements OnInit {
   }
 
   etiquetaEstado(e: string): string {
-    return ({ DISPONIBLE:'Disponible', PENDIENTE_APROBACION:'Pendiente', RECHAZADO:'Rechazado', EN_PROCESO:'En proceso', ADOPTADO:'Adoptado' } as any)[e] ?? e;
+    return ({ DISPONIBLE: 'Disponible', PENDIENTE_APROBACION: 'Pendiente', RECHAZADO: 'Rechazado', EN_PROCESO: 'En proceso', ADOPTADO: 'Adoptado' } as any)[e] ?? e;
   }
   etiquetaSolicitud(e: string): string {
-    return ({ PENDIENTE:'Pendiente', ACEPTADA:'Aceptada', RECHAZADA:'Rechazada' } as any)[e] ?? e;
+    return ({ PENDIENTE: 'Pendiente', ACEPTADA: 'Aceptada', RECHAZADA: 'Rechazada' } as any)[e] ?? e;
   }
   etiquetaTamanyo(t: string): string {
-    return ({ PEQUENO:'Pequeño', MEDIANO:'Mediano', GRANDE:'Grande' } as any)[t] ?? t;
+    return ({ PEQUENO: 'Pequeño', MEDIANO: 'Mediano', GRANDE: 'Grande' } as any)[t] ?? t;
   }
 
   get animalesPendientes(): number { return this.animales.filter(a => a.estado === 'PENDIENTE_APROBACION').length; }

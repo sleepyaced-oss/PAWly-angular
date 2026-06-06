@@ -18,8 +18,7 @@ export class PerfilComponent implements OnInit {
   guardando = false;
   mensaje = '';
   error = '';
-  private readonly API = 'http://localhost/pawly-backend/api';
-
+private readonly API = 'https://pawly-backend-h4hq.onrender.com/api';
   constructor(
     private auth: AuthService,
     private router: Router,

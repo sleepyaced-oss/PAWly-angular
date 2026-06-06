@@ -20,25 +20,24 @@ export class PublicarComponent {
     provincia: '', localidad: ''
   };
 
-  especies  = ['Perro', 'Gato', 'Conejo', 'Ave', 'Hamster', 'Tortuga'];
-  sexos     = ['MACHO', 'HEMBRA'];
-  etapas    = ['CACHORRO', 'ADULTO', 'MAYOR'];
-  tamanios  = ['PEQUENO', 'MEDIANO', 'GRANDE'];
+  especies = ['Perro', 'Gato', 'Conejo', 'Ave', 'Hamster', 'Tortuga'];
+  sexos = ['MACHO', 'HEMBRA'];
+  etapas = ['CACHORRO', 'ADULTO', 'MAYOR'];
+  tamanios = ['PEQUENO', 'MEDIANO', 'GRANDE'];
 
   cargando = false;
-  error    = '';
-  private readonly API = 'http://localhost/pawly-backend/api';
-
+  error = '';
+  private readonly API = 'https://pawly-backend-h4hq.onrender.com/api';
   constructor(private auth: AuthService, private router: Router, private http: HttpClient) {
     if (!this.auth.estaAutenticado()) this.router.navigate(['/login']);
   }
 
   onSubmit(): void {
     this.error = '';
-    const requeridos = ['nombre','especie','sexo','etapa_vida','tamanyo','color','descripcion','provincia','localidad'];
+    const requeridos = ['nombre', 'especie', 'sexo', 'etapa_vida', 'tamanyo', 'color', 'descripcion', 'provincia', 'localidad'];
     for (const campo of requeridos) {
       if (!(this.datos as any)[campo]) {
-        this.error = `El campo "${campo.replace('_',' ')}" es obligatorio.`;
+        this.error = `El campo "${campo.replace('_', ' ')}" es obligatorio.`;
         return;
       }
     }

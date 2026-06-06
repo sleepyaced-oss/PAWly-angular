@@ -22,8 +22,7 @@ export class AnimalComponent implements OnInit {
   exito = '';
   esFavorito = false;
   toggleandoFav = false;
-  private readonly API = 'http://localhost/pawly-backend/api';
-
+  private readonly API = 'https://pawly-backend-h4hq.onrender.com/api';
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -31,7 +30,7 @@ export class AnimalComponent implements OnInit {
     public auth: AuthService,
     private http: HttpClient,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -55,7 +54,7 @@ export class AnimalComponent implements OnInit {
         this.esFavorito = favs.some(f => f.id === animalId);
         this.cdr.detectChanges();
       },
-      error: () => {}
+      error: () => { }
     });
   }
 

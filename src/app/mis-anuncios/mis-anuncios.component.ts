@@ -17,8 +17,7 @@ export class MisAnunciosComponent implements OnInit {
   cargando = true;
   error = '';
   mensaje = '';
-  private readonly API = 'http://localhost/pawly-backend/api';
-
+  private readonly API = 'https://pawly-backend-h4hq.onrender.com/api';
   constructor(
     private auth: AuthService,
     private router: Router,
@@ -49,9 +48,9 @@ export class MisAnunciosComponent implements OnInit {
   }
 
   etiquetaEstado(e: string): string {
-    return ({ DISPONIBLE:'Disponible', PENDIENTE_APROBACION:'Pendiente', RECHAZADO:'Rechazado', EN_PROCESO:'En proceso', ADOPTADO:'Adoptado' } as any)[e] ?? e;
+    return ({ DISPONIBLE: 'Disponible', PENDIENTE_APROBACION: 'Pendiente', RECHAZADO: 'Rechazado', EN_PROCESO: 'En proceso', ADOPTADO: 'Adoptado' } as any)[e] ?? e;
   }
   iconoEspecie(e: string): string {
-    return ({ Perro:'🐶', Gato:'🐱', Conejo:'🐰', Ave:'🐦', Hamster:'🐹', Tortuga:'🐢' } as any)[e] ?? '🐾';
+    return ({ Perro: '🐶', Gato: '🐱', Conejo: '🐰', Ave: '🐦', Hamster: '🐹', Tortuga: '🐢' } as any)[e] ?? '🐾';
   }
 }
