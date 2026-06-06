@@ -1,0 +1,97 @@
+<div class="page">
+
+  <header class="hero">
+    <div class="hero__glow"></div>
+    <div class="hero__content">
+      <span class="hero__tag">Adopción entre particulares</span>
+      <h1 class="hero__title">Encuentra tu<br><em>compañero</em> ideal</h1>
+      <p class="hero__sub">Miles de animales esperan un hogar. El tuyo está aquí.</p>
+    </div>
+  </header>
+
+  <section class="filters">
+    <div class="filters__inner">
+      <div class="filter-group">
+        <label class="filter-label">Especie</label>
+        <select class="filter-select" [(ngModel)]="filtros.especie" (change)="aplicarFiltros()">
+          <option value="">Todas</option>
+          <option *ngFor="let e of especies" [value]="e">{{ e }}</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">Etapa</label>
+        <select class="filter-select" [(ngModel)]="filtros.etapa_vida" (change)="aplicarFiltros()">
+          <option value="">Todas</option>
+          <option *ngFor="let et of etapas" [value]="et">{{ etiquetaEtapa(et) }}</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">Sexo</label>
+        <select class="filter-select" [(ngModel)]="filtros.sexo" (change)="aplicarFiltros()">
+          <option value="">Todos</option>
+          <option *ngFor="let s of sexos" [value]="s">{{ s === 'MACHO' ? 'Macho' : 'Hembra' }}</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">Orden</label>
+        <select class="filter-select" [(ngModel)]="filtros.orden" (change)="aplicarFiltros()">
+          <option value="desc">Más recientes</option>
+          <option value="asc">Más antiguos</option>
+        </select>
+      </div>
+      <button class="filter-clear" (click)="limpiarFiltros()">Limpiar</button>
+    </div>
+  </section>
+
+  <main class="main">
+
+    <div *ngIf="cargando" class="state">
+      <span class="spinner"></span>
+      <p>Cargando animales…</p>
+    </div>
+
+    <div *ngIf="!cargando && error" class="state state--error">
+      <p>{{ error }}</p>
+    </div>
+
+    <div *ngIf="!cargando && !error && animales.length === 0" class="state">
+      <p>No hay animales con esos filtros.</p>
+      <button class="btn-outline" (click)="limpiarFiltros()">Ver todos</button>
+    </div>
+
+    <div *ngIf="!cargando && !error && animales.length > 0" class="grid">
+      <article *ngFor="let a of animales" class="card" (click)="verDetalle(a.id)">
+        <div class="card__img-wrap">
+          <img *ngIf="a.imagen" [src]="'http://localhost/' + a.imagen" [alt]="a.nombre" class="card__img" />
+          <img *ngIf="!a.imagen" [src]="a.especie + '.JPG'" [alt]="a.especie" class="card__img" />
+          <span class="card__badge">{{ a.especie }}</span>
+        </div>
+        <div class="card__body">
+          <div class="card__top">
+            <h2 class="card__nombre">{{ a.nombre }}</h2>
+            <span class="card__sexo" [class.card__sexo--h]="a.sexo === 'HEMBRA'">
+              {{ a.sexo === 'MACHO' ? '♂' : '♀' }}
+            </span>
+          </div>
+          <p class="card__raza">{{ a.raza ?? a.especie }}</p>
+          <div class="card__tags">
+            <span class="tag">{{ etiquetaEtapa(a.etapa_vida) }}</span>
+            <span class="tag">{{ etiquetaTamanyo(a.tamanyo) }}</span>
+            <span class="tag tag--green" *ngIf="a.vacunado">Vacunado</span>
+            <span class="tag tag--green" *ngIf="a.esterilizado">Esterilizado</span>
+          </div>
+          <p class="card__desc">{{ a.descripcion }}</p>
+          <footer class="card__footer">
+            <span>{{ a.localidad }}, {{ a.provincia }}</span>
+            <span>por {{ a.publicador_nombre }}</span>
+          </footer>
+        </div>
+      </article>
+    </div>
+
+    <p *ngIf="!cargando && animales.length > 0" class="result-count">
+      {{ animales.length }} {{ animales.length === 1 ? 'animal encontrado' : 'animales encontrados' }}
+    </p>
+
+  </main>
+</div>

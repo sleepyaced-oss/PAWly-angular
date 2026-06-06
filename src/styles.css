@@ -1,0 +1,22 @@
+:root {
+  --green:  #386641;
+  --sage:   #6a994e;
+  --lime:   #a7c957;
+  --cream:  #f2e8cf;
+  --brick:  #c24667;
+  --dark:   #1a2e1c;
+  --mid:    #4a6741;
+  --light:  #eef5e0;
+  --white:  #ffffff;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  background: #f2e8cf;
+  overflow-x: hidden;
+}

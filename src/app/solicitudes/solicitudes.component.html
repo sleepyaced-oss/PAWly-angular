@@ -1,0 +1,62 @@
+<div class="page">
+  <h1 class="page__title">Solicitudes</h1>
+
+  <div *ngIf="mensaje" class="msg msg--ok">{{ mensaje }}</div>
+  <div *ngIf="error"   class="msg msg--err">{{ error }}</div>
+
+  <div class="tabs">
+    <button class="tab" [class.tab--active]="vista === 'recibidas'" (click)="vista = 'recibidas'">
+      Recibidas <span class="tab__count">{{ recibidas.length }}</span>
+    </button>
+    <button class="tab" [class.tab--active]="vista === 'enviadas'" (click)="vista = 'enviadas'">
+      Enviadas <span class="tab__count">{{ enviadas.length }}</span>
+    </button>
+  </div>
+
+  <div *ngIf="cargando" class="state"><span class="spinner"></span><p>Cargando…</p></div>
+
+  <!-- RECIBIDAS -->
+  <div *ngIf="!cargando && vista === 'recibidas'">
+    <div *ngIf="recibidas.length === 0" class="state"><p>No has recibido ninguna solicitud aún.</p></div>
+    <div *ngIf="recibidas.length > 0" class="lista">
+      <div *ngFor="let s of recibidas" class="item">
+        <div class="item__animal">
+          <strong>{{ s.animal_nombre }}</strong>
+          <span class="item__especie">{{ s.especie }}</span>
+        </div>
+        <div class="item__body">
+          <p class="item__solicitante">De: <strong>{{ s.solicitante_nombre }}</strong></p>
+          <p *ngIf="s.mensaje" class="item__msg">"{{ s.mensaje }}"</p>
+        </div>
+        <div class="item__right">
+          <span class="estado" [ngClass]="'estado--' + s.estado.toLowerCase()">{{ etiquetaEstado(s.estado) }}</span>
+          <div *ngIf="s.estado === 'PENDIENTE'" class="item__actions">
+            <button class="btn-sm btn-sm--ok"     (click)="cambiarEstado(s.id, 'aceptar')">Aceptar</button>
+            <button class="btn-sm btn-sm--danger"  (click)="cambiarEstado(s.id, 'rechazar')">Rechazar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ENVIADAS -->
+  <div *ngIf="!cargando && vista === 'enviadas'">
+    <div *ngIf="enviadas.length === 0" class="state"><p>No has enviado ninguna solicitud aún.</p></div>
+    <div *ngIf="enviadas.length > 0" class="lista">
+      <div *ngFor="let s of enviadas" class="item">
+        <div class="item__animal">
+          <strong>{{ s.animal_nombre }}</strong>
+          <span class="item__especie">{{ s.especie }}</span>
+        </div>
+        <div class="item__body">
+          <p class="item__solicitante">Para: <strong>{{ s.publicador_nombre }}</strong></p>
+          <p *ngIf="s.mensaje" class="item__msg">"{{ s.mensaje }}"</p>
+        </div>
+        <div class="item__right">
+          <span class="estado" [ngClass]="'estado--' + s.estado.toLowerCase()">{{ etiquetaEstado(s.estado) }}</span>
+          <button *ngIf="s.estado === 'PENDIENTE'" class="btn-sm btn-sm--danger" (click)="cancelar(s.id)">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,252 @@
+<div class="page">
+  <div class="page__header">
+    <div>
+      <h1 class="page__title">Panel de administración</h1>
+      <p class="page__sub">{{ usuarios.length }} usuarios · {{ animales.length }} animales · {{ solicitudes.length }} solicitudes</p>
+    </div>
+    <span *ngIf="animalesPendientes > 0" class="badge-pendiente">{{ animalesPendientes }} pendientes</span>
+  </div>
+
+  <div *ngIf="mensaje" class="msg msg--ok">{{ mensaje }}</div>
+  <div *ngIf="error"   class="msg msg--err">{{ error }}</div>
+
+  <div class="tabs">
+    <button class="tab" [class.tab--active]="vista === 'animales'"    (click)="vista = 'animales'">Animales <span class="tab__count">{{ animales.length }}</span></button>
+    <button class="tab" [class.tab--active]="vista === 'usuarios'"    (click)="vista = 'usuarios'">Usuarios <span class="tab__count">{{ usuarios.length }}</span></button>
+    <button class="tab" [class.tab--active]="vista === 'solicitudes'" (click)="vista = 'solicitudes'">Solicitudes <span class="tab__count">{{ solicitudes.length }}</span></button>
+  </div>
+
+  <div *ngIf="cargando" class="state"><span class="spinner"></span><p>Cargando…</p></div>
+
+  <!-- ANIMALES -->
+  <div *ngIf="!cargando && vista === 'animales'">
+
+    <div *ngIf="animalEditando" class="form-usuario">
+      <div class="form-usuario__header">
+        <h2 class="form-usuario__title">Editando: {{ animalEditando.nombre }}</h2>
+        <button class="form-usuario__close" (click)="cerrarEdicionAnimal()">✕</button>
+      </div>
+      <div *ngIf="errorEdicionAnimal" class="msg msg--err">{{ errorEdicionAnimal }}</div>
+      <div class="form-usuario__grid form-usuario__grid--3">
+        <div class="field">
+          <label class="field__label">Nombre *</label>
+          <input class="field__input" type="text" [(ngModel)]="animalEditando.nombre" name="an_nombre" />
+        </div>
+        <div class="field">
+          <label class="field__label">Especie *</label>
+          <select class="field__input" [(ngModel)]="animalEditando.especie" name="an_especie">
+            <option *ngFor="let e of especies" [value]="e">{{ e }}</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field__label">Raza</label>
+          <input class="field__input" type="text" [(ngModel)]="animalEditando.raza" name="an_raza" />
+        </div>
+        <div class="field">
+          <label class="field__label">Sexo *</label>
+          <select class="field__input" [(ngModel)]="animalEditando.sexo" name="an_sexo">
+            <option *ngFor="let s of sexos" [value]="s">{{ s === 'MACHO' ? 'Macho' : 'Hembra' }}</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field__label">Etapa *</label>
+          <select class="field__input" [(ngModel)]="animalEditando.etapa_vida" name="an_etapa">
+            <option value="CACHORRO">Cachorro</option>
+            <option value="ADULTO">Adulto</option>
+            <option value="MAYOR">Senior</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field__label">Tamaño *</label>
+          <select class="field__input" [(ngModel)]="animalEditando.tamanyo" name="an_tam">
+            <option value="PEQUENO">Pequeño</option>
+            <option value="MEDIANO">Mediano</option>
+            <option value="GRANDE">Grande</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field__label">Color *</label>
+          <input class="field__input" type="text" [(ngModel)]="animalEditando.color" name="an_color" />
+        </div>
+        <div class="field">
+          <label class="field__label">Provincia *</label>
+          <input class="field__input" type="text" [(ngModel)]="animalEditando.provincia" name="an_prov" />
+        </div>
+        <div class="field">
+          <label class="field__label">Localidad *</label>
+          <input class="field__input" type="text" [(ngModel)]="animalEditando.localidad" name="an_loc" />
+        </div>
+        <div class="field field--full">
+          <label class="field__label">Descripción *</label>
+          <textarea class="field__input field__textarea" [(ngModel)]="animalEditando.descripcion" name="an_desc" rows="3"></textarea>
+        </div>
+      </div>
+      <div class="form-usuario__footer">
+        <button class="btn-outline" (click)="cerrarEdicionAnimal()">Cancelar</button>
+        <button class="btn-primary" (click)="guardarEdicionAnimal()" [disabled]="guardandoEdicionAnimal">
+          <span *ngIf="!guardandoEdicionAnimal">Guardar cambios</span>
+          <span *ngIf="guardandoEdicionAnimal" class="spinner spinner--sm"></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="tabla-wrap">
+      <table class="tabla">
+        <thead><tr><th>ID</th><th>Nombre</th><th>Especie</th><th>Publicador</th><th>Provincia</th><th>Estado</th><th>Acciones</th></tr></thead>
+        <tbody>
+          <tr *ngFor="let a of animales" [class.row--pendiente]="a.estado === 'PENDIENTE_APROBACION'">
+            <td class="td--id">{{ a.id }}</td>
+            <td><strong>{{ a.nombre }}</strong></td>
+            <td>{{ a.especie }}</td>
+            <td>{{ a.publicador_nombre }}</td>
+            <td>{{ a.provincia }}</td>
+            <td><span class="estado" [ngClass]="'estado--' + a.estado.toLowerCase()">{{ etiquetaEstado(a.estado) }}</span></td>
+            <td class="td--actions">
+              <a [routerLink]="['/animal', a.id]" class="btn-sm">Ver</a>
+              <button class="btn-sm" (click)="abrirEdicionAnimal(a)">Editar</button>
+              <button *ngIf="a.estado === 'PENDIENTE_APROBACION'" class="btn-sm btn-sm--ok"     (click)="aprobar(a.id)">Aprobar</button>
+              <button *ngIf="a.estado === 'PENDIENTE_APROBACION'" class="btn-sm btn-sm--danger" (click)="rechazar(a.id)">Rechazar</button>
+              <button class="btn-sm btn-sm--danger" (click)="eliminarAnimal(a.id, a.nombre)">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- USUARIOS -->
+  <div *ngIf="!cargando && vista === 'usuarios'">
+    <div class="tabla-toolbar">
+      <button class="btn-primary" (click)="abrirFormUsuario()">+ Añadir usuario</button>
+    </div>
+
+    <div *ngIf="mostrarFormUsuario" class="form-usuario">
+      <div class="form-usuario__header">
+        <h2 class="form-usuario__title">Nuevo usuario</h2>
+        <button class="form-usuario__close" (click)="cerrarFormUsuario()">✕</button>
+      </div>
+      <div *ngIf="errorUsuario" class="msg msg--err">{{ errorUsuario }}</div>
+      <div class="form-usuario__grid">
+        <div class="field">
+          <label class="field__label">Nombre *</label>
+          <input class="field__input" type="text" placeholder="Nombre completo" [(ngModel)]="nuevoUsuario.nombre" name="u_nombre" />
+        </div>
+        <div class="field">
+          <label class="field__label">Email *</label>
+          <input class="field__input" type="email" placeholder="correo@ejemplo.com" [(ngModel)]="nuevoUsuario.email" name="u_email" />
+        </div>
+        <div class="field">
+          <label class="field__label">Contraseña *</label>
+          <input class="field__input" type="password" placeholder="Mínimo 6 caracteres" [(ngModel)]="nuevoUsuario.password" name="u_password" />
+        </div>
+        <div class="field">
+          <label class="field__label">Rol</label>
+          <select class="field__input" [(ngModel)]="nuevoUsuario.rol" name="u_rol">
+            <option value="USER">Usuario</option>
+            <option value="ADMIN">Administrador</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field__label">Teléfono</label>
+          <input class="field__input" type="tel" placeholder="6XX XXX XXX" [(ngModel)]="nuevoUsuario.telefono" name="u_telefono" />
+        </div>
+        <div class="field">
+          <label class="field__label">Provincia</label>
+          <input class="field__input" type="text" placeholder="Sevilla" [(ngModel)]="nuevoUsuario.provincia" name="u_provincia" />
+        </div>
+        <div class="field">
+          <label class="field__label">Localidad</label>
+          <input class="field__input" type="text" placeholder="Dos Hermanas" [(ngModel)]="nuevoUsuario.localidad" name="u_localidad" />
+        </div>
+      </div>
+      <div class="form-usuario__footer">
+        <button class="btn-outline" (click)="cerrarFormUsuario()">Cancelar</button>
+        <button class="btn-primary" (click)="crearUsuario()" [disabled]="guardandoUsuario">
+          <span *ngIf="!guardandoUsuario">Crear usuario</span>
+          <span *ngIf="guardandoUsuario" class="spinner spinner--sm"></span>
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="usuarioEditando" class="form-usuario">
+      <div class="form-usuario__header">
+        <h2 class="form-usuario__title">Editando: {{ usuarioEditando.nombre }}</h2>
+        <button class="form-usuario__close" (click)="cerrarEdicionUsuario()">✕</button>
+      </div>
+      <div *ngIf="errorEdicionUsuario" class="msg msg--err">{{ errorEdicionUsuario }}</div>
+      <div class="form-usuario__grid">
+        <div class="field">
+          <label class="field__label">Nombre *</label>
+          <input class="field__input" type="text" [(ngModel)]="usuarioEditando.nombre" name="ue_nombre" />
+        </div>
+        <div class="field">
+          <label class="field__label">Email</label>
+          <input class="field__input" type="email" [(ngModel)]="usuarioEditando.email" name="ue_email" />
+        </div>
+        <div class="field">
+          <label class="field__label">Teléfono</label>
+          <input class="field__input" type="tel" [(ngModel)]="usuarioEditando.telefono" name="ue_tel" />
+        </div>
+        <div class="field">
+          <label class="field__label">Rol</label>
+          <select class="field__input" [(ngModel)]="usuarioEditando.rol" name="ue_rol">
+            <option value="USER">Usuario</option>
+            <option value="ADMIN">Administrador</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field__label">Provincia</label>
+          <input class="field__input" type="text" [(ngModel)]="usuarioEditando.provincia" name="ue_prov" />
+        </div>
+        <div class="field">
+          <label class="field__label">Localidad</label>
+          <input class="field__input" type="text" [(ngModel)]="usuarioEditando.localidad" name="ue_loc" />
+        </div>
+      </div>
+      <div class="form-usuario__footer">
+        <button class="btn-outline" (click)="cerrarEdicionUsuario()">Cancelar</button>
+        <button class="btn-primary" (click)="guardarEdicionUsuario()" [disabled]="guardandoEdicionUsuario">
+          <span *ngIf="!guardandoEdicionUsuario">Guardar cambios</span>
+          <span *ngIf="guardandoEdicionUsuario" class="spinner spinner--sm"></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="tabla-wrap">
+      <table class="tabla">
+        <thead><tr><th>ID</th><th>Nombre</th><th>Email</th><th>Provincia</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr></thead>
+        <tbody>
+          <tr *ngFor="let u of usuarios">
+            <td class="td--id">{{ u.id }}</td>
+            <td><strong>{{ u.nombre }}</strong></td>
+            <td class="td--email">{{ u.email }}</td>
+            <td>{{ u.provincia }}</td>
+            <td><span class="rol" [class.rol--admin]="u.rol === 'ADMIN'">{{ u.rol }}</span></td>
+            <td><span class="activo" [class.activo--no]="!u.activo">{{ u.activo ? 'Activo' : 'Inactivo' }}</span></td>
+            <td class="td--actions">
+              <button class="btn-sm" (click)="abrirEdicionUsuario(u)">Editar</button>
+              <button *ngIf="u.rol !== 'ADMIN'" class="btn-sm btn-sm--danger" (click)="eliminarUsuario(u.id, u.nombre)">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SOLICITUDES -->
+  <div *ngIf="!cargando && vista === 'solicitudes'" class="tabla-wrap">
+    <table class="tabla">
+      <thead><tr><th>ID</th><th>Animal</th><th>Solicitante</th><th>Propietario</th><th>Mensaje</th><th>Estado</th></tr></thead>
+      <tbody>
+        <tr *ngFor="let s of solicitudes">
+          <td class="td--id">{{ s.id }}</td>
+          <td><strong>{{ s.animal_nombre }}</strong><br><small>{{ s.especie }}</small></td>
+          <td>{{ s.solicitante_nombre }}</td>
+          <td>{{ s.publicador_nombre }}</td>
+          <td class="td--msg">{{ s.mensaje ?? '—' }}</td>
+          <td><span class="estado" [ngClass]="'estado--' + s.estado.toLowerCase()">{{ etiquetaSolicitud(s.estado) }}</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

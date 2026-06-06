@@ -1,0 +1,90 @@
+<div class="page">
+  <div class="page__header">
+    <a routerLink="/mis-anuncios" class="back">← Mis anuncios</a>
+    <h1 class="page__title">Editar animal</h1>
+    <p class="page__sub">Al guardar, el anuncio volverá a estado pendiente de aprobación.</p>
+  </div>
+
+  <div *ngIf="error"   class="msg msg--err">⚠️ {{ error }}</div>
+  <div *ngIf="cargando" class="state"><span class="spinner"></span><p>Cargando…</p></div>
+
+  <form *ngIf="!cargando && datos" class="form" (ngSubmit)="guardar()">
+    <div class="form__section">
+      <h2 class="form__section-title">Información básica</h2>
+      <div class="form__grid">
+        <div class="field">
+          <label class="field__label">Nombre *</label>
+          <input class="field__input" type="text" [(ngModel)]="datos.nombre" name="nombre" />
+        </div>
+        <div class="field">
+          <label class="field__label">Especie *</label>
+          <select class="field__input" [(ngModel)]="datos.especie" name="especie">
+            <option *ngFor="let e of especies" [value]="e">{{ e }}</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field__label">Raza</label>
+          <input class="field__input" type="text" [(ngModel)]="datos.raza" name="raza" />
+        </div>
+        <div class="field">
+          <label class="field__label">Color *</label>
+          <input class="field__input" type="text" [(ngModel)]="datos.color" name="color" />
+        </div>
+        <div class="field">
+          <label class="field__label">Sexo *</label>
+          <select class="field__input" [(ngModel)]="datos.sexo" name="sexo">
+            <option *ngFor="let s of sexos" [value]="s">{{ s === 'MACHO' ? 'Macho' : 'Hembra' }}</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field__label">Etapa *</label>
+          <select class="field__input" [(ngModel)]="datos.etapa_vida" name="etapa_vida">
+            <option *ngFor="let et of etapas" [value]="et">{{ etiquetaEtapa(et) }}</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field__label">Tamaño *</label>
+          <select class="field__input" [(ngModel)]="datos.tamanyo" name="tamanyo">
+            <option *ngFor="let t of tamanios" [value]="t">{{ etiquetaTamanyo(t) }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="field field--full">
+        <label class="field__label">Descripción *</label>
+        <textarea class="field__input field__textarea" [(ngModel)]="datos.descripcion" name="descripcion" rows="4"></textarea>
+      </div>
+    </div>
+
+    <div class="form__section">
+      <h2 class="form__section-title">Salud</h2>
+      <div class="checks">
+        <label class="check"><input type="checkbox" [checked]="datos.vacunado" (change)="datos.vacunado = $any($event.target).checked ? 1 : 0" /><span>Vacunado</span></label>
+        <label class="check"><input type="checkbox" [checked]="datos.esterilizado" (change)="datos.esterilizado = $any($event.target).checked ? 1 : 0" /><span>Esterilizado</span></label>
+        <label class="check"><input type="checkbox" [checked]="datos.desparasitado" (change)="datos.desparasitado = $any($event.target).checked ? 1 : 0" /><span>Desparasitado</span></label>
+        <label class="check"><input type="checkbox" [checked]="datos.microchip" (change)="datos.microchip = $any($event.target).checked ? 1 : 0" /><span>Microchip</span></label>
+      </div>
+    </div>
+
+    <div class="form__section">
+      <h2 class="form__section-title">Ubicación</h2>
+      <div class="form__grid">
+        <div class="field">
+          <label class="field__label">Provincia *</label>
+          <input class="field__input" type="text" [(ngModel)]="datos.provincia" name="provincia" />
+        </div>
+        <div class="field">
+          <label class="field__label">Localidad *</label>
+          <input class="field__input" type="text" [(ngModel)]="datos.localidad" name="localidad" />
+        </div>
+      </div>
+    </div>
+
+    <div class="form__footer">
+      <a routerLink="/mis-anuncios" class="btn-outline">Cancelar</a>
+      <button class="btn-primary" type="submit" [disabled]="guardando">
+        <span *ngIf="!guardando">Guardar cambios</span>
+        <span *ngIf="guardando" class="spinner"></span>
+      </button>
+    </div>
+  </form>
+</div>

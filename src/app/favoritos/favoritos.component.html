@@ -1,0 +1,58 @@
+<div class="page">
+  <div class="page__header">
+    <h1 class="page__title">❤️ Mis favoritos</h1>
+    <p class="page__sub">Animales que has guardado para no perderlos de vista.</p>
+  </div>
+
+  <div *ngIf="cargando" class="state"><span class="spinner"></span>
+    <p>Cargando…</p>
+  </div>
+
+  <div *ngIf="!cargando && error" class="state state--error">
+    <p>⚠️ {{ error }}</p>
+  </div>
+
+  <div *ngIf="!cargando && !error && favoritos.length === 0" class="state">
+    <span class="state__icon">🤍</span>
+    <p>Todavía no tienes ningún favorito.</p>
+    <a routerLink="/" class="btn-outline">Explorar animales</a>
+  </div>
+
+  <div *ngIf="!cargando && favoritos.length > 0" class="grid">
+    <article *ngFor="let a of favoritos" class="card" [routerLink]="['/animal', a.id]">
+
+      <div class="card__img-wrap">
+        <img *ngIf="a.imagen" [src]="'http://localhost/' + a.imagen" [alt]="a.nombre" class="card__img" />
+        <img *ngIf="!a.imagen" [src]="a.especie + '.JPG'" [alt]="a.especie" class="card__img" /> <span
+          class="card__badge">{{ a.especie }}</span>
+        <span class="card__fav">❤️</span>
+      </div>
+
+      <div class="card__body">
+        <div class="card__top">
+          <h2 class="card__nombre">{{ a.nombre }}</h2>
+          <span class="card__sexo" [class.card__sexo--h]="a.sexo === 'HEMBRA'">
+            {{ a.sexo === 'MACHO' ? '♂' : '♀' }}
+          </span>
+        </div>
+        <p class="card__raza">{{ a.raza ?? a.especie }}</p>
+        <div class="card__tags">
+          <span class="tag">{{ etiquetaEtapa(a.etapa_vida) }}</span>
+          <span class="tag">{{ etiquetaTamanyo(a.tamanyo) }}</span>
+          <span class="tag tag--green" *ngIf="a.vacunado">✓ Vacunado</span>
+          <span class="tag tag--green" *ngIf="a.esterilizado">✓ Esterilizado</span>
+        </div>
+        <p class="card__desc">{{ a.descripcion }}</p>
+        <footer class="card__footer">
+          <span>📍 {{ a.localidad }}, {{ a.provincia }}</span>
+          <span>por {{ a.publicador_nombre }}</span>
+        </footer>
+      </div>
+
+    </article>
+  </div>
+
+  <p *ngIf="!cargando && favoritos.length > 0" class="result-count">
+    {{ favoritos.length }} {{ favoritos.length === 1 ? 'favorito' : 'favoritos' }}
+  </p>
+</div>

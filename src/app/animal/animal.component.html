@@ -1,0 +1,95 @@
+<div class="page">
+  <div *ngIf="cargando" class="state"><span class="spinner"></span>
+    <p>Cargando…</p>
+  </div>
+  <div *ngIf="!cargando && error" class="state state--error">
+    <p>⚠️ {{ error }}</p><a routerLink="/" class="btn-outline">Volver</a>
+  </div>
+
+  <div *ngIf="!cargando && animal" class="detalle">
+    <a routerLink="/" class="back">← Volver a resultados</a>
+    <div class="detalle__grid">
+      <!-- Imagen -->
+      <div class="detalle__img-wrap">
+        <img *ngIf="animal.imagen" [src]="'http://localhost/' + animal.imagen" [alt]="animal.nombre"
+          class="detalle__img" />
+        <img *ngIf="!animal.imagen" [src]="animal.especie + '.JPG'" [alt]="animal.especie" class="detalle__img" />
+      </div>
+
+      <!-- Info -->
+      <div class="detalle__info">
+        <div class="detalle__header">
+          <div>
+            <span class="detalle__especie">{{ animal.especie }}</span>
+            <h1 class="detalle__nombre">{{ animal.nombre }}</h1>
+            <p class="detalle__raza">{{ animal.raza ?? animal.especie }}</p>
+          </div>
+          <div class="detalle__header-right">
+            <span class="detalle__sexo" [class.detalle__sexo--h]="animal.sexo === 'HEMBRA'">
+              {{ animal.sexo === 'MACHO' ? '♂' : '♀' }}
+            </span>
+            <!-- Botón favorito: solo si está autenticado y no es su propio anuncio -->
+            <button *ngIf="auth.estaAutenticado() && !esPropio()" class="btn-fav" [class.btn-fav--activo]="esFavorito"
+              [disabled]="toggleandoFav" (click)="toggleFavorito()"
+              [title]="esFavorito ? 'Quitar de favoritos' : 'Guardar en favoritos'">
+              {{ esFavorito ? '❤️' : '🤍' }}
+            </button>
+          </div>
+        </div>
+
+        <div class="detalle__tags">
+          <span class="tag">{{ etiquetaEtapa(animal.etapa_vida) }}</span>
+          <span class="tag">{{ etiquetaTamanyo(animal.tamanyo) }}</span>
+          <span class="tag">{{ animal.color }}</span>
+          <span class="tag tag--green" *ngIf="animal.vacunado">✓ Vacunado</span>
+          <span class="tag tag--green" *ngIf="animal.esterilizado">✓ Esterilizado</span>
+          <span class="tag tag--green" *ngIf="animal.desparasitado">✓ Desparasitado</span>
+          <span class="tag tag--green" *ngIf="animal.microchip">✓ Microchip</span>
+        </div>
+
+        <p class="detalle__desc">{{ animal.descripcion }}</p>
+
+        <div class="detalle__ubicacion">
+          <span>📍 {{ animal.localidad }}, {{ animal.provincia }}</span>
+          <span>👤 Publicado por <strong>{{ animal.publicador_nombre }}</strong></span>
+        </div>
+
+        <!-- Acción -->
+        <div class="detalle__accion">
+          <!-- No autenticado -->
+          <div *ngIf="!auth.estaAutenticado()" class="accion-box">
+            <p>¿Te interesa este animal? Inicia sesión para enviar una solicitud.</p>
+            <a routerLink="/login" class="btn-primary">Iniciar sesión</a>
+          </div>
+
+          <!-- Es propio -->
+          <div *ngIf="auth.estaAutenticado() && esPropio()" class="accion-box accion-box--propio">
+            <p>Este es tu anuncio.</p>
+            <a routerLink="/mis-anuncios" class="btn-outline">Gestionar mis anuncios</a>
+          </div>
+
+          <!-- Puede solicitar -->
+          <div *ngIf="auth.estaAutenticado() && !esPropio() && !exito" class="accion-box">
+            <p class="accion-box__title">Enviar solicitud de adopción</p>
+            <textarea class="accion-textarea"
+              placeholder="Cuéntale al dueño por qué serías un buen hogar para {{ animal.nombre }}… (opcional)"
+              [(ngModel)]="mensajeSolicitud" rows="3">
+            </textarea>
+            <button class="btn-primary" (click)="enviarSolicitud()" [disabled]="enviando">
+              <span *ngIf="!enviando">Solicitar adopción</span>
+              <span *ngIf="enviando" class="spinner spinner--sm"></span>
+            </button>
+            <p *ngIf="error" class="accion-error">⚠️ {{ error }}</p>
+          </div>
+
+          <!-- Éxito -->
+          <div *ngIf="exito" class="accion-box accion-box--exito">
+            <p>✅ {{ exito }}</p>
+            <a routerLink="/solicitudes" class="btn-outline">Ver mis solicitudes</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

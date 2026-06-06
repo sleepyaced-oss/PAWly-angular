@@ -1,0 +1,77 @@
+<div class="auth-page">
+  <div class="auth-deco">
+    <div class="auth-deco__glow"></div>
+    <div class="auth-deco__content">
+      <span class="auth-deco__icon">🐾</span>
+      <h1 class="auth-deco__title">PAWly</h1>
+      <p class="auth-deco__sub">La plataforma de adopción<br>entre particulares</p>
+    </div>
+  </div>
+
+  <div class="auth-panel">
+    <div class="auth-tabs">
+      <button class="auth-tab" [class.auth-tab--active]="modo === 'login'" (click)="cambiarModo('login')">Iniciar sesión</button>
+      <button class="auth-tab" [class.auth-tab--active]="modo === 'register'" (click)="cambiarModo('register')">Crear cuenta</button>
+    </div>
+
+    <div *ngIf="error" class="auth-error">⚠️ {{ error }}</div>
+
+    <!-- LOGIN -->
+    <form *ngIf="modo === 'login'" class="auth-form" (ngSubmit)="onLogin()">
+      <div class="field">
+        <label class="field__label">Email</label>
+        <input class="field__input" type="email" placeholder="tu@email.com" [(ngModel)]="loginData.email" name="email" />
+      </div>
+      <div class="field">
+        <label class="field__label">Contraseña</label>
+        <input class="field__input" type="password" placeholder="••••••••" [(ngModel)]="loginData.password" name="password" />
+      </div>
+      <button class="auth-btn" type="submit" [disabled]="cargando">
+        <span *ngIf="!cargando">Entrar</span>
+        <span *ngIf="cargando" class="spinner"></span>
+      </button>
+    </form>
+
+    <!-- REGISTRO -->
+    <form *ngIf="modo === 'register'" class="auth-form" (ngSubmit)="onRegister()">
+      <div class="field">
+        <label class="field__label">Nombre *</label>
+        <input class="field__input" type="text" placeholder="Tu nombre" [(ngModel)]="registerData.nombre" name="nombre" />
+      </div>
+      <div class="field">
+        <label class="field__label">Email *</label>
+        <input class="field__input" type="email" placeholder="tu@email.com" [(ngModel)]="registerData.email" name="email" />
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label class="field__label">Contraseña *</label>
+          <input class="field__input" type="password" placeholder="••••••••" [(ngModel)]="registerData.password" name="password" />
+        </div>
+        <div class="field">
+          <label class="field__label">Confirmar *</label>
+          <input class="field__input" type="password" placeholder="••••••••" [(ngModel)]="registerData.confirmar" name="confirmar" />
+        </div>
+      </div>
+      <div class="field">
+        <label class="field__label">Teléfono</label>
+        <input class="field__input" type="tel" placeholder="6XX XXX XXX" [(ngModel)]="registerData.telefono" name="telefono" />
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label class="field__label">Provincia</label>
+          <input class="field__input" type="text" placeholder="Sevilla" [(ngModel)]="registerData.provincia" name="provincia" />
+        </div>
+        <div class="field">
+          <label class="field__label">Localidad</label>
+          <input class="field__input" type="text" placeholder="Dos Hermanas" [(ngModel)]="registerData.localidad" name="localidad" />
+        </div>
+      </div>
+      <button class="auth-btn" type="submit" [disabled]="cargando">
+        <span *ngIf="!cargando">Crear cuenta</span>
+        <span *ngIf="cargando" class="spinner"></span>
+      </button>
+    </form>
+
+    <a routerLink="/" class="auth-back">← Volver al inicio</a>
+  </div>
+</div>

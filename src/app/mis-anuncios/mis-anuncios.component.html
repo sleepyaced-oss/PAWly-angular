@@ -1,0 +1,37 @@
+<div class="page">
+  <div class="page__header">
+    <h1 class="page__title">Mis anuncios</h1>
+    <a routerLink="/publicar" class="btn-primary">+ Publicar animal</a>
+  </div>
+
+  <div *ngIf="mensaje" class="msg msg--ok">{{ mensaje }}</div>
+  <div *ngIf="error"   class="msg msg--err">{{ error }}</div>
+
+  <div *ngIf="cargando" class="state"><span class="spinner"></span><p>Cargando…</p></div>
+
+  <div *ngIf="!cargando && animales.length === 0" class="state">
+    <p>Aún no has publicado ningún animal.</p>
+    <a routerLink="/publicar" class="btn-outline">Publicar ahora</a>
+  </div>
+
+  <div *ngIf="!cargando && animales.length > 0" class="lista">
+    <div *ngFor="let a of animales" class="item">
+      <div class="item__especie">{{ a.especie }}</div>
+      <div class="item__info">
+        <div class="item__top">
+          <h2 class="item__nombre">{{ a.nombre }}</h2>
+          <span class="estado" [ngClass]="'estado--' + a.estado.toLowerCase()">{{ etiquetaEstado(a.estado) }}</span>
+        </div>
+        <p class="item__meta">{{ a.especie }} · {{ a.raza ?? a.especie }} · {{ a.localidad }}, {{ a.provincia }}</p>
+        <p *ngIf="a.estado === 'RECHAZADO' && a.motivo_rechazo" class="item__rechazo">
+          Motivo: {{ a.motivo_rechazo }}
+        </p>
+      </div>
+      <div class="item__actions">
+        <a *ngIf="a.estado === 'DISPONIBLE'" [routerLink]="['/animal', a.id]" class="btn-sm">Ver</a>
+        <a [routerLink]="['/editar-animal', a.id]" class="btn-sm">Editar</a>
+        <button class="btn-sm btn-sm--danger" (click)="eliminar(a.id, a.nombre)">Eliminar</button>
+      </div>
+    </div>
+  </div>
+</div>

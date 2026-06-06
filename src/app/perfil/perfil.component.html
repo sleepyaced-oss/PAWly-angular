@@ -1,0 +1,46 @@
+<div class="page">
+  <div class="page__header">
+    <a routerLink="/" class="back">← Inicio</a>
+    <h1 class="page__title">Mi perfil</h1>
+    <p class="page__sub">Actualiza tus datos personales.</p>
+  </div>
+
+  <div *ngIf="mensaje" class="msg msg--ok">✅ {{ mensaje }}</div>
+  <div *ngIf="error"   class="msg msg--err">⚠️ {{ error }}</div>
+  <div *ngIf="cargando" class="state"><span class="spinner"></span><p>Cargando…</p></div>
+
+  <form *ngIf="!cargando" class="form" (ngSubmit)="guardar()">
+    <div class="form__section">
+      <h2 class="form__section-title">Datos personales</h2>
+      <div class="form__grid">
+        <div class="field field--full">
+          <label class="field__label">Nombre *</label>
+          <input class="field__input" type="text" [(ngModel)]="datos.nombre" name="nombre" />
+        </div>
+        <div class="field">
+          <label class="field__label">Teléfono</label>
+          <input class="field__input" type="tel" placeholder="6XX XXX XXX" [(ngModel)]="datos.telefono" name="telefono" />
+        </div>
+        <div class="field">
+          <label class="field__label">Provincia</label>
+          <input class="field__input" type="text" placeholder="Sevilla" [(ngModel)]="datos.provincia" name="provincia" />
+        </div>
+        <div class="field">
+          <label class="field__label">Localidad</label>
+          <input class="field__input" type="text" placeholder="Dos Hermanas" [(ngModel)]="datos.localidad" name="localidad" />
+        </div>
+        <div class="field field--full">
+          <label class="field__label">Biografía</label>
+          <textarea class="field__input field__textarea" placeholder="Cuéntanos algo sobre ti…" [(ngModel)]="datos.biografia" name="biografia" rows="3"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="form__footer">
+      <a routerLink="/" class="btn-outline">Cancelar</a>
+      <button class="btn-primary" type="submit" [disabled]="guardando">
+        <span *ngIf="!guardando">Guardar cambios</span>
+        <span *ngIf="guardando" class="spinner"></span>
+      </button>
+    </div>
+  </form>
+</div>
